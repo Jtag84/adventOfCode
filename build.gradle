@@ -1,0 +1,38 @@
+plugins {
+	id 'org.springframework.boot' version '2.6.1'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+	id 'java-test-fixtures'
+}
+
+group = 'com.clement'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '16'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation platform('org.springframework.boot:spring-boot-dependencies:2.6.1')
+	testFixturesImplementation platform('org.springframework.boot:spring-boot-dependencies:2.6.1')
+	testImplementation platform("org.junit:junit-bom:5.8.1")
+
+	implementation 'org.springframework.boot:spring-boot-starter'
+	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.apache.commons:commons-lang3:3.12.0'
+	testImplementation 'com.google.guava:guava:31.0.1-jre'
+	testImplementation 'org.apache.commons:commons-math3:3.6.1'
+
+}
+
+test {
+	useJUnitPlatform()
+}
