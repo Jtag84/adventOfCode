@@ -21,7 +21,7 @@ class DayFiveTest {
 	private static final Logger log = LoggerFactory.getLogger(DayFiveTest.class);
 
 	private BufferedReader getInputsReader() {
-		InputStream is = this.getClass().getResourceAsStream("/2021/dayFive/inputs");
+		InputStream is = this.getClass().getResourceAsStream("inputs");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		return reader;
 	}

@@ -19,7 +19,7 @@ class DayThreeTest {
 	private static final Logger log = LoggerFactory.getLogger(DayThreeTest.class);
 
 	private Stream<String> getInputLines() {
-		InputStream is = this.getClass().getResourceAsStream("/2021/dayThree/inputs");
+		InputStream is = this.getClass().getResourceAsStream("inputs");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		return reader.lines();
 	}

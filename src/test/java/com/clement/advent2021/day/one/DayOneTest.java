@@ -16,7 +16,7 @@ class DayOneTest {
 	List<Long> inputs;
 
 	public DayOneTest() throws IOException {
-		try (InputStream is = this.getClass().getResourceAsStream("/2021/dayOne/inputs")) {
+		try (InputStream is = this.getClass().getResourceAsStream("inputs")) {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 			inputs = reader.lines().map(Long::parseLong)
 					.toList();

@@ -16,7 +16,7 @@ class DayTwoTest {
 	private static final Logger log = LoggerFactory.getLogger(DayTwoTest.class);
 
 	private Stream<String> getInputLines() {
-		InputStream is = this.getClass().getResourceAsStream("/2021/dayTwo/inputs");
+		InputStream is = this.getClass().getResourceAsStream("inputs");
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		return reader.lines();
 	}
