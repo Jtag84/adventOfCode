@@ -1,39 +1,29 @@
 package com.clement.advent2021.day.two;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-class DayTwoTest {
-	private static final Logger log = LoggerFactory.getLogger(DayTwoTest.class);
+import com.clement.utils.SolutionBase;
 
-	private Stream<String> getInputLines() {
-		InputStream is = this.getClass().getResourceAsStream("inputs");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		return reader.lines();
-	}
+class DayTwoTest extends SolutionBase {
 
 	private Pair<Function<Long, Long>, Function<Long, Long>> parseInstructionPart1(String line) {
 		String[] instructionValuePair = line.split(" ");
 		String instruction = instructionValuePair[0];
 		return switch (instruction) {
-			case "forward" -> 	Pair.of((horizontalPosition) -> horizontalPosition + Long.parseLong(instructionValuePair[1]), Function.identity());
-			case "up" -> 		Pair.of(Function.identity(), (depthPosition) -> depthPosition - Long.parseLong(instructionValuePair[1]));
-			case "down" -> 		Pair.of(Function.identity(), (depthPosition) -> depthPosition + Long.parseLong(instructionValuePair[1]));
+			case "forward" -> Pair.of((horizontalPosition) -> horizontalPosition + Long.parseLong(instructionValuePair[1]), Function.identity());
+			case "up" -> Pair.of(Function.identity(), (depthPosition) -> depthPosition - Long.parseLong(instructionValuePair[1]));
+			case "down" -> Pair.of(Function.identity(), (depthPosition) -> depthPosition + Long.parseLong(instructionValuePair[1]));
 			default -> throw new IllegalArgumentException("Can't handle " + instruction);
 		};
 	}
 
 	public Stream<Pair<Function<Long, Long>, Function<Long, Long>>> getInstructionsPart1() {
-		return getInputLines().map(this::parseInstructionPart1);
+		return getInputsReader().lines().map(this::parseInstructionPart1);
 	}
 
 	private Pair<Long, Long> applyInstructionPart1(Pair<Long, Long> position, Pair<Function<Long, Long>, Function<Long, Long>> instruction) {
@@ -53,7 +43,7 @@ class DayTwoTest {
 	}
 
 	public Stream<Triple<Function<Triple<Long, Long, Long>, Long>, Function<Triple<Long, Long, Long>, Long>, Function<Triple<Long, Long, Long>, Long>>> getInstructionsPart2() {
-		return getInputLines().map(this::parseInstructionPart2);
+		return getInputsReader().lines().map(this::parseInstructionPart2);
 	}
 
 	private Triple<Long, Long, Long> applyInstructionPart2(Triple<Long, Long, Long> position, Triple<Function<Triple<Long, Long, Long>, Long>, Function<Triple<Long, Long, Long>, Long>, Function<Triple<Long, Long, Long>, Long>> instruction) {

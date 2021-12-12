@@ -2,8 +2,6 @@ package com.clement.advent2021.day.four;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,22 +10,14 @@ import java.util.stream.Stream;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-class DayFourTest {
-	private static final Logger log = LoggerFactory.getLogger(DayFourTest.class);
+import com.clement.utils.SolutionBase;
 
+class DayFourTest extends SolutionBase {
 	private List<Double> getDrawings() throws IOException {
 		return Stream.of(getInputsReader().readLine().split(","))
 				.map(Double::parseDouble)
 				.toList();
-	}
-
-	private BufferedReader getInputsReader() {
-		InputStream is = this.getClass().getResourceAsStream("inputs");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		return reader;
 	}
 
 	private List<Array2DRowRealMatrix> getBoards() throws IOException {
@@ -46,8 +36,7 @@ class DayFourTest {
 				i = 0;
 				inputsReader.skip(1L);
 				board = new double[5][5];
-			}
-			else {
+			} else {
 				i++;
 			}
 			line = inputsReader.readLine();
@@ -79,8 +68,7 @@ class DayFourTest {
 		final double columnOrderScore = array2DRowRealMatrix.walkInColumnOrder(new ColumnVerifier(curentDrawings));
 		if(columnOrderScore > 0) {
 			return columnOrderScore;
-		}
-		else {
+		} else {
 			return array2DRowRealMatrix.walkInRowOrder(new RowVerifier(curentDrawings));
 		}
 	}

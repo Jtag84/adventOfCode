@@ -2,10 +2,7 @@ package com.clement.advent2021.day.nine;
 
 import static java.util.Comparator.reverseOrder;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,20 +11,11 @@ import java.util.stream.IntStream;
 import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import com.clement.utils.SolutionBase;
 import com.google.common.collect.Streams;
 
-class DayNineTest {
-	private static final Logger log = LoggerFactory.getLogger(DayNineTest.class);
-
-	private BufferedReader getInputsReader() {
-		InputStream is = this.getClass().getResourceAsStream("inputs");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		return reader;
-	}
-
+class DayNineTest extends SolutionBase {
 	@Test
 	void part1() throws IOException {
 		int[][] smokeFlows = getInputsReader().lines()

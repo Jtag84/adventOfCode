@@ -1,9 +1,6 @@
 package com.clement.advent2021.day.ten;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -12,21 +9,12 @@ import java.util.Spliterators;
 import java.util.stream.StreamSupport;
 
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import com.clement.utils.SolutionBase;
 import com.google.common.base.Optional;
 
-class DayTenTest {
-	private static final Logger log = LoggerFactory.getLogger(DayTenTest.class);
-
+class DayTenTest extends SolutionBase {
 	Map<Character, Character> openingClosingCharacters = Map.of('(', ')', '[', ']', '{', '}', '<', '>');
-
-	private BufferedReader getInputsReader() {
-		InputStream is = this.getClass().getResourceAsStream("inputs");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		return reader;
-	}
 
 	@Test
 	void part1() throws IOException {

@@ -1,30 +1,18 @@
 package com.clement.advent2021.day.eleven;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import com.clement.utils.SolutionBase;
 import com.google.common.collect.Lists;
 import com.google.common.collect.MoreCollectors;
 
-class DayElevenTest {
-	private static final Logger log = LoggerFactory.getLogger(DayElevenTest.class);
-
-	private BufferedReader getInputsReader() {
-		InputStream is = this.getClass().getResourceAsStream("inputs");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		return reader;
-	}
-
+class DayElevenTest extends SolutionBase {
 	@Test
 	void part1() throws IOException {
 		int[][] octopuses = getOctopuses();

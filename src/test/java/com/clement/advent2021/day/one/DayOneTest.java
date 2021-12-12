@@ -1,33 +1,21 @@
 package com.clement.advent2021.day.one;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-class DayOneTest {
-	private static final Logger log = LoggerFactory.getLogger(DayOneTest.class);
+import com.clement.utils.SolutionBase;
 
-	List<Long> inputs;
-
-	public DayOneTest() throws IOException {
-		try (InputStream is = this.getClass().getResourceAsStream("inputs")) {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-			inputs = reader.lines().map(Long::parseLong)
-					.toList();
-		}
-	}
+class DayOneTest extends SolutionBase {
+	List<Long> inputs = getInputsReader().lines()
+			.map(Long::parseLong)
+			.toList();
 
 	@Test
-	void part1(){
+	void part1() {
 		int numberOfincrease = 0;
-		for(int i = 1; i <inputs.size(); i++) {
-			if(inputs.get(i) - inputs.get(i-1) > 0) {
+		for (int i = 1; i < inputs.size(); i++) {
+			if (inputs.get(i) - inputs.get(i - 1) > 0) {
 				numberOfincrease++;
 			}
 		}

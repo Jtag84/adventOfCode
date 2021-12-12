@@ -4,27 +4,17 @@ import static java.util.Arrays.asList;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.groupingBy;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-class DayFiveTest {
-	private static final Logger log = LoggerFactory.getLogger(DayFiveTest.class);
+import com.clement.utils.SolutionBase;
 
-	private BufferedReader getInputsReader() {
-		InputStream is = this.getClass().getResourceAsStream("inputs");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		return reader;
-	}
+class DayFiveTest extends SolutionBase {
 
 	private Stream<List<Pair<Integer, Integer>>> getLineCoordinates() throws IOException {
 		return getInputsReader().lines()

@@ -1,8 +1,5 @@
 package com.clement.advent2021.day.three;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -10,29 +7,21 @@ import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import com.clement.utils.SolutionBase;
 import com.google.common.collect.Streams;
 
-class DayThreeTest {
-	private static final Logger log = LoggerFactory.getLogger(DayThreeTest.class);
-
-	private Stream<String> getInputLines() {
-		InputStream is = this.getClass().getResourceAsStream("inputs");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		return reader.lines();
-	}
+class DayThreeTest extends SolutionBase {
 
 	@Test
-	void part1(){
-		int gamma = getInputLines()
+	void part1() {
+		int gamma = getInputsReader().lines()
 				.map(String::chars)
 				.map(intStream -> intStream.mapToObj(intChar -> intChar - '0'))
 				.reduce(Stream.of(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 						(countOfOnes, binaryValue) -> Streams.zip(countOfOnes, binaryValue, Integer::sum),
 						(previousCount, newCount) -> newCount)
-				.map(numberOfOnes -> numberOfOnes > 500? 1:0)
+				.map(numberOfOnes -> numberOfOnes > 500 ? 1 : 0)
 				.reduce(0, (previousBinaryDigit, newBinaryDigit) -> (previousBinaryDigit << 1) + newBinaryDigit);
 
 		int epsilon = 0b111111111111 ^ gamma;
@@ -43,7 +32,7 @@ class DayThreeTest {
 	@Test
 	void part2(){
 		int initialMask = 0b100000000000;
-		Map<Integer, List<Integer>> split0andOnesMap = getInputLines()
+		Map<Integer, List<Integer>> split0andOnesMap = getInputsReader().lines()
 				.map(binaryString -> Integer.parseInt(binaryString, 2))
 				.collect(Collectors.groupingBy(binaryInt -> binaryInt & initialMask));
 
