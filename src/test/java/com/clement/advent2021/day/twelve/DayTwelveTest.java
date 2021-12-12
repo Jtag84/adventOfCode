@@ -3,7 +3,6 @@ package com.clement.advent2021.day.twelve;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
-import static java.util.Collections.emptySet;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
@@ -14,10 +13,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
@@ -38,15 +35,24 @@ class DayTwelveTest {
 
 	@Test
 	void part1() throws IOException {
-		Map<Object, List<String>> cavesMap = getCavesMap();
+		long numberOfPaths = getNumberOfPaths(getCavesMap(), 1);
 
-		long numberOfPaths = cavesMap.get("end").stream()
-				.map(toCave -> findPaths(cavesMap, asList("end", toCave), emptySet()))
+		log.info("answer Part1: " + numberOfPaths);
+	}
+
+	@Test
+	void part2() throws IOException {
+		long numberOfPaths = getNumberOfPaths(getCavesMap(), 2);
+
+		log.info("answer Part2: " + numberOfPaths);
+	}
+
+	private long getNumberOfPaths(Map<Object, List<String>> cavesMap, int maxNumberOfVisitAllowed) {
+		return cavesMap.get("end").stream()
+				.map(toCave -> findPaths(cavesMap, asList("end", toCave), emptyMap(), maxNumberOfVisitAllowed))
 				.flatMap(List::stream)
 				.filter(CollectionUtils::isNotEmpty)
 				.count();
-
-		log.info("answer Part1: " + numberOfPaths);
 	}
 
 	private Map<Object, List<String>> getCavesMap() {
@@ -58,42 +64,7 @@ class DayTwelveTest {
 		return cavesMap;
 	}
 
-	private List<List<String>> findPaths(Map<Object, List<String>> cavesMap, List<String> path, Set<String> alreadyVisitedSmallCaves) {
-		String toCave = path.get(path.size() - 1);
-		if (toCave.equals("start")) {
-			return singletonList(path);
-		}
-
-		if (alreadyVisitedSmallCaves.contains(toCave) || toCave.equals("end")) {
-			return emptyList();
-		}
-
-		Set<String> newAlreadyVisitedSmallCaves = new HashSet<>(alreadyVisitedSmallCaves);
-		if (StringUtils.isAllLowerCase(toCave)) {
-			newAlreadyVisitedSmallCaves.add(toCave);
-		}
-
-		List<String> cavePaths = cavesMap.get(toCave);
-		return cavePaths.stream()
-				.map(cave -> findPaths(cavesMap, ListUtils.union(path, singletonList(cave)), newAlreadyVisitedSmallCaves))
-				.flatMap(List::stream)
-				.toList();
-	}
-
-	@Test
-	void part2() throws IOException {
-		Map<Object, List<String>> cavesMap = getCavesMap();
-
-		long numberOfPaths = cavesMap.get("end").stream()
-				.map(toCave -> findPaths(cavesMap, asList("end", toCave), emptyMap()))
-				.flatMap(List::stream)
-				.filter(CollectionUtils::isNotEmpty)
-				.count();
-
-		log.info("answer Part2: " + numberOfPaths);
-	}
-
-	private List<List<String>> findPaths(Map<Object, List<String>> cavesMap, List<String> path, Map<String, Integer> alreadyVisitedSmallCaves) {
+	private List<List<String>> findPaths(Map<Object, List<String>> cavesMap, List<String> path, Map<String, Integer> alreadyVisitedSmallCaves, int maxNumberOfVisitAllowed) {
 		String toCave = path.get(path.size() - 1);
 		if (toCave.equals("start")) {
 			return singletonList(path);
@@ -104,7 +75,7 @@ class DayTwelveTest {
 		}
 
 		if (alreadyVisitedSmallCaves.containsKey(toCave)) {
-			boolean hasAnyCaveBeenVisitedTwice = alreadyVisitedSmallCaves.values().stream().anyMatch(numberOfVisits -> numberOfVisits >= 2);
+			boolean hasAnyCaveBeenVisitedTwice = alreadyVisitedSmallCaves.values().stream().anyMatch(numberOfVisits -> numberOfVisits >= maxNumberOfVisitAllowed);
 			if (hasAnyCaveBeenVisitedTwice) {
 				return emptyList();
 			}
@@ -117,9 +88,8 @@ class DayTwelveTest {
 
 		List<String> cavePaths = cavesMap.get(toCave);
 		return cavePaths.stream()
-				.map(cave -> findPaths(cavesMap, ListUtils.union(path, singletonList(cave)), newAlreadyVisitedSmallCaves))
+				.map(cave -> findPaths(cavesMap, ListUtils.union(path, singletonList(cave)), newAlreadyVisitedSmallCaves, maxNumberOfVisitAllowed))
 				.flatMap(List::stream)
 				.toList();
 	}
-
 }
