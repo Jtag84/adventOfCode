@@ -47,7 +47,7 @@ class DayTwelveTest {
 		log.info("answer Part2: " + numberOfPaths);
 	}
 
-	private long getNumberOfPaths(Map<Object, List<String>> cavesMap, int maxNumberOfVisitAllowed) {
+	private long getNumberOfPaths(Map<String, List<String>> cavesMap, int maxNumberOfVisitAllowed) {
 		return cavesMap.get("end").stream()
 				.map(toCave -> findPaths(cavesMap, asList("end", toCave), emptyMap(), maxNumberOfVisitAllowed))
 				.flatMap(List::stream)
@@ -55,16 +55,15 @@ class DayTwelveTest {
 				.count();
 	}
 
-	private Map<Object, List<String>> getCavesMap() {
-		Map<Object, List<String>> cavesMap = getInputsReader().lines()
+	private Map<String, List<String>> getCavesMap() {
+		return getInputsReader().lines()
 				.map(line -> line.split("-"))
 				.map(caves -> asList(Pair.of(caves[0], caves[1]), Pair.of(caves[1], caves[0])))
 				.flatMap(List::stream)
 				.collect(groupingBy(Pair::getLeft, mapping(Pair::getRight, toList())));
-		return cavesMap;
 	}
 
-	private List<List<String>> findPaths(Map<Object, List<String>> cavesMap, List<String> path, Map<String, Integer> alreadyVisitedSmallCaves, int maxNumberOfVisitAllowed) {
+	private List<List<String>> findPaths(Map<String, List<String>> cavesMap, List<String> path, Map<String, Integer> alreadyVisitedSmallCaves, int maxNumberOfVisitAllowed) {
 		String toCave = path.get(path.size() - 1);
 		if (toCave.equals("start")) {
 			return singletonList(path);
@@ -75,8 +74,8 @@ class DayTwelveTest {
 		}
 
 		if (alreadyVisitedSmallCaves.containsKey(toCave)) {
-			boolean hasAnyCaveBeenVisitedTwice = alreadyVisitedSmallCaves.values().stream().anyMatch(numberOfVisits -> numberOfVisits >= maxNumberOfVisitAllowed);
-			if (hasAnyCaveBeenVisitedTwice) {
+			boolean hasAnyCaveBeenVisitedTheMaxAllowed = alreadyVisitedSmallCaves.values().stream().anyMatch(numberOfVisits -> numberOfVisits >= maxNumberOfVisitAllowed);
+			if (hasAnyCaveBeenVisitedTheMaxAllowed) {
 				return emptyList();
 			}
 		}
