@@ -1,5 +1,6 @@
 package com.clement.advent2021.day.fourteen;
 
+import static java.util.Collections.emptyMap;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 
@@ -41,7 +42,7 @@ class DayFourteenTest extends SolutionBase {
 		}
 		Map<Pair<String, Integer>, Map<Character, Long>> cache = new HashMap<>();
 		Map<Character, Long> elementCountMap = pairs.stream()
-				.map(currentPair -> calculateCharacterCountAfterInsertionForStep(currentPair, pairInsertionRules, new HashMap<>(), cache, numberOfSteps))
+				.map(currentPair -> calculateCharacterCountAfterInsertionForStep(currentPair, pairInsertionRules, cache, numberOfSteps))
 				.reduce(Collections.emptyMap(), this::mergeMap);
 
 		polymerTemplate.chars().mapToObj(c -> (char) c).forEach(c -> elementCountMap.compute(c, (key, value) -> value == null ? 1 : value + 1));
@@ -59,9 +60,9 @@ class DayFourteenTest extends SolutionBase {
 	}
 
 
-	private Map<Character, Long> calculateCharacterCountAfterInsertionForStep(String currentPair, Map<String, String> pairInsertionRules, Map<Character, Long> elementCountMap, Map<Pair<String, Integer>, Map<Character, Long>> cache, int step) {
+	private Map<Character, Long> calculateCharacterCountAfterInsertionForStep(String currentPair, Map<String, String> pairInsertionRules, Map<Pair<String, Integer>, Map<Character, Long>> cache, int step) {
 		if (step <= 0) {
-			return elementCountMap;
+			return emptyMap();
 		}
 
 		final Pair<String, Integer> cacheKey = Pair.of(currentPair, step);
@@ -71,15 +72,14 @@ class DayFourteenTest extends SolutionBase {
 		}
 
 		String insertedElement = pairInsertionRules.get(currentPair);
-		elementCountMap.compute(insertedElement.charAt(0), (key, value) -> value == null ? 1 : value + 1);
 
 		String leftPair = currentPair.charAt(0) + insertedElement;
 		String rightPair = insertedElement + currentPair.charAt(1);
-		Map<Character, Long> elementCountMapLeft = calculateCharacterCountAfterInsertionForStep(leftPair, pairInsertionRules, new HashMap<>(), cache, step - 1);
-		Map<Character, Long> elementCountMapRight = calculateCharacterCountAfterInsertionForStep(rightPair, pairInsertionRules, new HashMap<>(), cache, step - 1);
+		Map<Character, Long> elementCountMapLeft = calculateCharacterCountAfterInsertionForStep(leftPair, pairInsertionRules, cache, step - 1);
+		Map<Character, Long> elementCountMapRight = calculateCharacterCountAfterInsertionForStep(rightPair, pairInsertionRules, cache, step - 1);
 
 		Map<Character, Long> mergedMaps = mergeMap(elementCountMapLeft, elementCountMapRight);
-		mergedMaps = mergeMap(mergedMaps, elementCountMap);
+		mergedMaps.compute(insertedElement.charAt(0), (key, value) -> value == null ? 1 : value + 1);
 
 		cache.put(cacheKey, mergedMaps);
 
