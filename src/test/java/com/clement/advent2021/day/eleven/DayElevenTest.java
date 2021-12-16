@@ -1,15 +1,13 @@
 package com.clement.advent2021.day.eleven;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
+import com.clement.utils.AdventUtils;
 import com.clement.utils.SolutionBase;
-import com.google.common.collect.Lists;
 import com.google.common.collect.MoreCollectors;
 
 class DayElevenTest extends SolutionBase {
@@ -60,25 +58,10 @@ class DayElevenTest extends SolutionBase {
 	private void incrementEnergy(int[][] octopuses, int x, int y) {
 		octopuses[y][x]++;
 		if (octopuses[y][x] == 10) {
-			List<Integer> validXs = getValidCoordinates(x, octopuses[0].length);
-			List<Integer> validYs = getValidCoordinates(y, octopuses.length);
-			Lists.cartesianProduct(validXs, validYs).stream()
-					.skip(1)
-					.forEach(coordinates -> incrementEnergy(octopuses, coordinates.get(0), coordinates.get(1)));
+			AdventUtils.getValidCoordinatesAround(octopuses, Pair.of(x, y))
+					.forEach(coordinates -> incrementEnergy(octopuses, coordinates.getLeft(), coordinates.getRight()));
 		}
 
-	}
-
-	private List<Integer> getValidCoordinates(int position, int length) {
-		List<Integer> validCoordinates = new ArrayList<>();
-		validCoordinates.add(position);
-		if (position > 0) {
-			validCoordinates.add(position - 1);
-		}
-		if (position < length - 1) {
-			validCoordinates.add(position + 1);
-		}
-		return validCoordinates;
 	}
 
 	private int[][] getOctopuses() {
