@@ -21,6 +21,7 @@ repositories {
 
 dependencies {
 	implementation platform('org.springframework.boot:spring-boot-dependencies:2.6.1')
+	testImplementation 'org.jetbrains:annotations:20.1.0'
 	testFixturesImplementation platform('org.springframework.boot:spring-boot-dependencies:2.6.1')
 	testImplementation platform("org.junit:junit-bom:5.8.1")
 
