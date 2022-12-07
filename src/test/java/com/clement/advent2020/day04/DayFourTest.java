@@ -2,8 +2,6 @@ package com.clement.advent2020.day04;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,18 +14,14 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class DayFourTest {
+import com.clement.utils.SolutionBase;
+
+class DayFourTest extends SolutionBase {
 	private static final Logger log = LoggerFactory.getLogger(DayFourTest.class);
 
 	Set<String> validFieldsWithOptional = Set.of("byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid", "cid");
 	Set<String> validFieldsWithoutOptional = Set.of("byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid");
 	Set<String> validEcl = Set.of("amb", "blu", "brn", "gry", "grn", "hzl", "oth");
-
-	private BufferedReader getInputsReader() {
-		InputStream is = this.getClass().getResourceAsStream("inputs");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		return reader;
-	}
 
 	@Test
 	void part1() throws IOException {

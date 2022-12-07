@@ -1,22 +1,15 @@
 package com.clement.advent2020.day03;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class DayThreeTest {
-	private static final Logger log = LoggerFactory.getLogger(DayThreeTest.class);
+import com.clement.utils.SolutionBase;
 
-	private BufferedReader getInputsReader() {
-		InputStream is = this.getClass().getResourceAsStream("inputs");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		return reader;
-	}
+class DayThreeTest extends SolutionBase {
+	private static final Logger log = LoggerFactory.getLogger(DayThreeTest.class);
 
 	@Test
 	void part1() throws IOException {

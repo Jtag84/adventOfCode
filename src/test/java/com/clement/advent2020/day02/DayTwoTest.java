@@ -1,26 +1,18 @@
 package com.clement.advent2020.day02;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class DayTwoTest {
+import com.clement.utils.SolutionBase;
+
+class DayTwoTest extends SolutionBase {
 	private static final Logger log = LoggerFactory.getLogger(DayTwoTest.class);
 
-	private BufferedReader getInputsReader() {
-		InputStream is = this.getClass().getResourceAsStream("inputs");
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		return reader;
-	}
-
 	@Test
-	void part1() throws IOException {
+	void part1() {
 		long numberOfValidPasswords = getPasswordLineFields()
 				.filter(this::isPasswordValidPart1)
 				.count();
@@ -46,7 +38,7 @@ class DayTwoTest {
 	}
 
 	@Test
-	void part2() throws IOException {
+	void part2() {
 		long numberOfValidPasswords = getPasswordLineFields()
 				.filter(this::isPasswordValidPart2)
 				.count();
