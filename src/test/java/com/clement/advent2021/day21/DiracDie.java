@@ -6,5 +6,7 @@ import com.google.common.collect.Lists;
 
 public class DiracDie {
 	public static List<Integer> oneRoll = List.of(1, 2, 3);
-	public static List<List<Integer>> threeRolls = Lists.cartesianProduct(oneRoll, oneRoll, oneRoll);
+	public static List<Integer> threeRolls = Lists.cartesianProduct(oneRoll, oneRoll, oneRoll).stream()
+			.map(rolls -> rolls.stream().mapToInt(i -> i).sum())
+			.toList();
 }

@@ -42,7 +42,6 @@ public class Track {
 		}
 
 		return DiracDie.threeRolls.parallelStream()
-				.map(rolls -> rolls.stream().mapToInt(i -> i).sum())
 				.map(roll -> moveAndPlayWithCache(current, next, roll))
 				.reduce((pair1, pair2) -> Pair.of(pair1.getLeft() + pair2.getLeft(), pair1.getRight() + pair2.getRight()))
 				.orElseThrow(IllegalStateException::new);
