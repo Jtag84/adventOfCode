@@ -8,12 +8,14 @@ import java.util.Optional;
 import org.springframework.util.Assert;
 
 public class Directory {
-	public static Directory ROOT = new Directory("/");
-
 	private final String name;
 	private final Map<String, Directory> directoriesByName = new HashMap<>();
 	private final Map<String, File> filesByName = new HashMap<>();
 	private final Directory parent;
+
+	public static Directory root() {
+		return new Directory("/");
+	}
 
 	private Directory(String name) {
 		this.name = name;
@@ -27,7 +29,7 @@ public class Directory {
 	}
 
 	public Path getPath() {
-		if (this == ROOT) {
+		if (this.parent == null) {
 			return Path.of("/");
 		} else {
 			return parent.getPath().resolve(name);

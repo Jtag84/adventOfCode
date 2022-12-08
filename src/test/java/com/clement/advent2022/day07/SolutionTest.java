@@ -47,11 +47,11 @@ class SolutionTest extends SolutionBase {
 	}
 
 	private int getSizeOfSmallestDirectoryToDelete(BufferedReader bufferedReader) {
-		parseLines(bufferedReader);
+		Directory root = parseLines(bufferedReader);
 
-		Map<Path, Integer> directorySizes = Directory.ROOT.getDirectorySizes();
+		Map<Path, Integer> directorySizes = root.getDirectorySizes();
 
-		int spaceLeft = TOTAL_DISK_SPACE - directorySizes.get(Directory.ROOT.getPath());
+		int spaceLeft = TOTAL_DISK_SPACE - directorySizes.get(root.getPath());
 		int spaceNeeded = SPACE_NEEDED_FOR_UPDATE - spaceLeft;
 
 		return directorySizes.values().stream()
@@ -61,21 +61,20 @@ class SolutionTest extends SolutionBase {
 	}
 
 	private int getTotalFolderSizesUnder100000(BufferedReader bufferedReader) {
-		parseLines(bufferedReader);
-
-		return Directory.ROOT.getDirectorySizes().values().stream()
+		return parseLines(bufferedReader).getDirectorySizes().values().stream()
 				.filter(size -> size < 100000)
 				.mapToInt(i -> i).sum();
 	}
 
-	private void parseLines(BufferedReader bufferedReader) {
+	private Directory parseLines(BufferedReader bufferedReader) {
 		List<String> lines = bufferedReader.lines().skip(1).toList();
 
-		parseLines(lines);
+		return parseLines(lines);
 	}
 
-	private void parseLines(List<String> lines) {
-		Directory current = Directory.ROOT;
+	private Directory parseLines(List<String> lines) {
+		Directory root = Directory.root();
+		Directory current = root;
 
 		for (String line : lines) {
 			String[] lineSplit = line.split(" ");
@@ -96,6 +95,7 @@ class SolutionTest extends SolutionBase {
 				default -> current.addFile(new File(lineSplit[1], Integer.parseInt(lineSplit[0])));
 			}
 		}
+		return root;
 	}
 
 }
