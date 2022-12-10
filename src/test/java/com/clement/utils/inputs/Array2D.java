@@ -1,7 +1,11 @@
 package com.clement.utils.inputs;
 
+import java.util.Iterator;
 import java.util.function.IntUnaryOperator;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 public class Array2D {
 
@@ -44,6 +48,98 @@ public class Array2D {
 		}
 
 		return transposedArray;
+	}
+
+	private Iterator<Pair<Pair<Integer, Integer>, Integer>> getCoordinateValueRowIteratorFromLeft(int rowIndex) {
+		return new Iterator<>() {
+			private int currentRowElementIndex = 0;
+
+			@Override
+			public boolean hasNext() {
+				return currentRowElementIndex <= getMaxX();
+			}
+
+			@Override
+			public Pair<Pair<Integer, Integer>, Integer> next() {
+				Pair<Pair<Integer, Integer>, Integer> coordinateValuePair = Pair.of(Pair.of(currentRowElementIndex, rowIndex), get(currentRowElementIndex, rowIndex));
+				currentRowElementIndex++;
+				return coordinateValuePair;
+			}
+		};
+	}
+
+	private Iterator<Pair<Pair<Integer, Integer>, Integer>> getCoordinateValueRowIteratorFromRight(int rowIndex) {
+		return new Iterator<>() {
+			private int currentRowElementIndex = getMaxX();
+
+			@Override
+			public boolean hasNext() {
+				return currentRowElementIndex >= 0;
+			}
+
+			@Override
+			public Pair<Pair<Integer, Integer>, Integer> next() {
+				Pair<Pair<Integer, Integer>, Integer> coordinateValuePair = Pair.of(Pair.of(currentRowElementIndex, rowIndex), get(currentRowElementIndex, rowIndex));
+				currentRowElementIndex--;
+				return coordinateValuePair;
+			}
+		};
+	}
+
+	private Iterator<Pair<Pair<Integer, Integer>, Integer>> getCoordinateValueColumnIteratorFromTop(int columnIndex) {
+		return new Iterator<>() {
+			private int currentColumnElementIndex = 0;
+
+			@Override
+			public boolean hasNext() {
+				return currentColumnElementIndex <= getMaxY();
+			}
+
+			@Override
+			public Pair<Pair<Integer, Integer>, Integer> next() {
+				Pair<Pair<Integer, Integer>, Integer> coordinateValuePair = Pair.of(Pair.of(columnIndex, currentColumnElementIndex), get(columnIndex, currentColumnElementIndex));
+				currentColumnElementIndex++;
+				return coordinateValuePair;
+			}
+		};
+	}
+
+	private Iterator<Pair<Pair<Integer, Integer>, Integer>> getCoordinateValueColumnIteratorFromBottom(int columnIndex) {
+		return new Iterator<>() {
+			private int currentColumnElementIndex = getMaxY();
+
+			@Override
+			public boolean hasNext() {
+				return currentColumnElementIndex >= 0;
+			}
+
+			@Override
+			public Pair<Pair<Integer, Integer>, Integer> next() {
+				Pair<Pair<Integer, Integer>, Integer> coordinateValuePair = Pair.of(Pair.of(columnIndex, currentColumnElementIndex), get(columnIndex, currentColumnElementIndex));
+				currentColumnElementIndex--;
+				return coordinateValuePair;
+			}
+		};
+	}
+
+	public Iterable<Iterable<Pair<Pair<Integer, Integer>, Integer>>> getCoordinateValueRowFromLeftIterators() {
+		return toIterable(IntStream.rangeClosed(0, getMaxY()).mapToObj(this::getCoordinateValueRowIteratorFromLeft).map(Array2D::toIterable).iterator());
+	}
+
+	public Iterable<Iterable<Pair<Pair<Integer, Integer>, Integer>>> getCoordinateValueRowFromRightIterators() {
+		return toIterable(IntStream.rangeClosed(0, getMaxY()).mapToObj(this::getCoordinateValueRowIteratorFromRight).map(Array2D::toIterable).iterator());
+	}
+
+	public Iterable<Iterable<Pair<Pair<Integer, Integer>, Integer>>> getCoordinateValueColumnFromTopIterators() {
+		return toIterable(IntStream.rangeClosed(0, getMaxX()).mapToObj(this::getCoordinateValueColumnIteratorFromTop).map(Array2D::toIterable).iterator());
+	}
+
+	public Iterable<Iterable<Pair<Pair<Integer, Integer>, Integer>>> getCoordinateValueColumnFromBottomIterators() {
+		return toIterable(IntStream.rangeClosed(0, getMaxX()).mapToObj(this::getCoordinateValueColumnIteratorFromBottom).map(Array2D::toIterable).iterator());
+	}
+
+	private static <T> Iterable<T> toIterable(Iterator<T> iterator) {
+		return () -> iterator;
 	}
 
 }
