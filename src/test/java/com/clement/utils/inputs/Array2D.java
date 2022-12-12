@@ -1,11 +1,18 @@
 package com.clement.utils.inputs;
 
 import java.util.Iterator;
+import java.util.Optional;
+import java.util.Set;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.function.IntUnaryOperator;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.jetbrains.annotations.NotNull;
 
 public class Array2D {
 
@@ -142,4 +149,27 @@ public class Array2D {
 		return () -> iterator;
 	}
 
+	public Stream<Pair<Pair<Integer, Integer>, Integer>> streamByRowFromTopLeft() {
+		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(getCoordinateValueRowFromRightIterators().iterator(), Spliterator.ORDERED), false)
+				.flatMap(iterable -> StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterable.iterator(), Spliterator.ORDERED), false));
+	}
+
+	public Set<Pair<Integer, Integer>> findAllCoordinatesByValue(int value) {
+		return findCoordinatesByValueStream(value).collect(Collectors.toSet());
+	}
+
+	public Optional<Pair<Integer, Integer>> findFirstCoordinatesByValue(int value) {
+		return findCoordinatesByValueStream(value).findFirst();
+	}
+
+	@NotNull
+	private Stream<Pair<Integer, Integer>> findCoordinatesByValueStream(int value) {
+		return streamByRowFromTopLeft()
+				.filter(coordinateValuePair -> coordinateValuePair.getRight() == value)
+				.map(Pair::getLeft);
+	}
+
+	public void set(Pair<Integer, Integer> xYcoordinates, int value) {
+		this.array2d[xYcoordinates.getLeft()][xYcoordinates.getRight()] = value;
+	}
 }
