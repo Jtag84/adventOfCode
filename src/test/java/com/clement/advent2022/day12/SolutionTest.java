@@ -3,6 +3,8 @@ package com.clement.advent2022.day12;
 import java.io.BufferedReader;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -13,6 +15,9 @@ import com.clement.utils.SolutionBase;
 import com.clement.utils.inputs.Array2D;
 import com.clement.utils.search.a_star.AStar;
 import com.clement.utils.search.a_star.Array2dNode;
+import com.clement.utils.search.a_star.CostFunctions;
+import com.clement.utils.search.a_star.HeuristicFunctions;
+import com.clement.utils.search.a_star.NeighborsCalculators;
 import com.clement.utils.search.a_star.Node;
 
 class SolutionTest extends SolutionBase {
@@ -71,7 +76,7 @@ class SolutionTest extends SolutionBase {
 		heightmap.set(goal.getXYcoordinates(), 'z');
 
 		return heightmap.findCoordinatesByValueStream('a')
-				.map(coordinates -> HeightmapNode.buildHeightmapNodePart2(coordinates, heightmap))
+				.map(coordinates -> buildHeightmapNodePart2(coordinates, heightmap))
 				.map(node -> AStar.aStarSearch(node, goal))
 				.filter(path -> path.getLeft() > 0)
 				.min(Comparator.comparing(Pair::getLeft))
@@ -79,8 +84,28 @@ class SolutionTest extends SolutionBase {
 	}
 
 	@NotNull
-	private static Array2dNode findNodeByValue(Array2D heightmap, char toFind) {
+	private Array2dNode findNodeByValue(Array2D heightmap, char toFind) {
 		Pair<Integer, Integer> coordinates = heightmap.findFirstCoordinatesByValue(toFind).orElseThrow();
-		return HeightmapNode.buildHeightmapNode(coordinates, heightmap);
+		return buildHeightmapNode(coordinates, heightmap);
+	}
+
+	private Array2dNode buildHeightmapNodePart2(Pair<Integer, Integer> coordinates, Array2D map) {
+		return new Array2dNode(coordinates.getLeft(), coordinates.getRight(), map, this::calculateNeighborsPart2, HeuristicFunctions::manhattanDistanceHeuristic, CostFunctions::simpleCost);
+	}
+
+	private Array2dNode buildHeightmapNode(Pair<Integer, Integer> coordinates, Array2D map) {
+		return new Array2dNode(coordinates.getLeft(), coordinates.getRight(), map, this::calculateNeighbors, HeuristicFunctions::manhattanDistanceHeuristic, CostFunctions::simpleCost);
+	}
+
+	private Set<Array2dNode> calculateNeighbors(Array2dNode node, Array2D map) {
+		return NeighborsCalculators.defaultCalculateNeighbors(node, map).stream()
+				.filter(neighbor -> neighbor.getValue() - node.getValue() <= 1)
+				.collect(Collectors.toSet());
+	}
+
+	private Set<Array2dNode> calculateNeighborsPart2(Array2dNode node, Array2D map) {
+		return calculateNeighbors(node, map).stream()
+				.filter(neighbor -> neighbor.getValue() != 'a')
+				.collect(Collectors.toSet());
 	}
 }

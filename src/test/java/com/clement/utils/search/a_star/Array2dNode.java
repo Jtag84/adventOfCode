@@ -1,12 +1,10 @@
 package com.clement.utils.search.a_star;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Assertions;
@@ -14,7 +12,6 @@ import org.junit.jupiter.api.Assertions;
 import com.clement.utils.inputs.Array2D;
 
 public class Array2dNode extends Node {
-
 	private final Array2D map;
 
 	private final int x;
@@ -22,15 +19,18 @@ public class Array2dNode extends Node {
 
 	private Set<Array2dNode> neighbors;
 
-	private final Function<Array2dNode, Set<Array2dNode>> calculateNeighbors;
+	private final BiFunction<Array2dNode, Array2D, Set<Array2dNode>> calculateNeighbors;
 	private final BiFunction<Array2dNode, Array2dNode, Integer> heuristicDistance;
 	private final BiFunction<Array2dNode, Array2dNode, Integer> cost;
 
 	public Array2dNode(int x, int y, Array2D map,
-					   Function<Array2dNode, Set<Array2dNode>> calculateNeighbors,
+					   BiFunction<Array2dNode, Array2D, Set<Array2dNode>> calculateNeighbors,
 					   BiFunction<Array2dNode, Array2dNode, Integer> heuristicDistance,
 					   BiFunction<Array2dNode, Array2dNode, Integer> cost) {
 		Assertions.assertNotNull(map);
+		Assertions.assertNotNull(calculateNeighbors);
+		Assertions.assertNotNull(heuristicDistance);
+		Assertions.assertNotNull(cost);
 		Assertions.assertTrue(x >= 0);
 		Assertions.assertTrue(y >= 0);
 		Assertions.assertTrue(x <= map.getMaxX());
@@ -44,15 +44,20 @@ public class Array2dNode extends Node {
 		this.cost = cost;
 	}
 
-	public Array2dNode(int x, int y, Array2D map) {
-		this(x, y, map,
-				Array2dNode::defaultCalculateNeighbors,
-				Array2dNode::defaultHeuristicDistance,
-				Array2dNode::defaultCost);
-	}
-
 	public static Array2dNode get(int x, int y, Array2dNode withNode) {
 		return new Array2dNode(x, y, withNode.map, withNode.calculateNeighbors, withNode.heuristicDistance, withNode.cost);
+	}
+
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public int getValue() {
+		return map.get(this.x, this.y);
 	}
 
 	@Override
@@ -61,31 +66,9 @@ public class Array2dNode extends Node {
 				.ifPresentOrElse(
 						a -> {
 						},
-						() -> this.neighbors = this.calculateNeighbors.apply(this));
+						() -> this.neighbors = this.calculateNeighbors.apply(this, this.map));
 
 		return this.neighbors;
-	}
-
-	public static Set<Array2dNode> defaultCalculateNeighbors(Array2dNode node) {
-		int maxXmap = node.map.getMaxX();
-		int maxYmap = node.map.getMaxY();
-
-		Set<Array2dNode> neighbors = new HashSet<>();
-
-		if (node.x > 0) {
-			neighbors.add(get(node.x - 1, node.y, node));
-		}
-		if (node.x < maxXmap) {
-			neighbors.add(get(node.x + 1, node.y, node));
-		}
-		if (node.y > 0) {
-			neighbors.add(get(node.x, node.y - 1, node));
-		}
-		if (node.y < maxYmap) {
-			neighbors.add(get(node.x, node.y + 1, node));
-		}
-
-		return neighbors;
 	}
 
 	@Override
@@ -96,18 +79,6 @@ public class Array2dNode extends Node {
 		} else { // use heuristic
 			return this.heuristicDistance.apply(this, other2DArray);
 		}
-	}
-
-	public static int defaultHeuristicDistance(Array2dNode from, Array2dNode to) {
-		return Math.abs(from.x - to.x) + Math.abs(from.y - to.y);
-	}
-
-	public static int defaultCost(Array2dNode from, Array2dNode to) {
-		return to.getValue();
-	}
-
-	public int getValue() {
-		return map.get(this.x, this.y);
 	}
 
 	@Override
