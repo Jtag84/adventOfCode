@@ -3,7 +3,6 @@ package com.clement.advent2022.day12;
 import java.io.BufferedReader;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
@@ -71,9 +70,7 @@ class SolutionTest extends SolutionBase {
 		heightmap.set(start.getXYcoordinates(), 'a');
 		heightmap.set(goal.getXYcoordinates(), 'z');
 
-		Set<Pair<Integer, Integer>> allAs = heightmap.findAllCoordinatesByValue('a');
-
-		return allAs.stream()
+		return heightmap.findCoordinatesByValueStream('a')
 				.map(coordinates -> HeightmapNode.buildHeightmapNodePart2(coordinates, heightmap))
 				.map(node -> AStar.aStarSearch(node, goal))
 				.filter(path -> path.getLeft() > 0)

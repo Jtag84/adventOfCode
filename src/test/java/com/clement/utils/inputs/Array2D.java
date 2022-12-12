@@ -2,11 +2,9 @@ package com.clement.utils.inputs;
 
 import java.util.Iterator;
 import java.util.Optional;
-import java.util.Set;
 import java.util.Spliterator;
 import java.util.Spliterators;
 import java.util.function.IntUnaryOperator;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
@@ -150,12 +148,8 @@ public class Array2D {
 	}
 
 	public Stream<Pair<Pair<Integer, Integer>, Integer>> streamByRowFromTopLeft() {
-		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(getCoordinateValueRowFromRightIterators().iterator(), Spliterator.ORDERED), false)
-				.flatMap(iterable -> StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterable.iterator(), Spliterator.ORDERED), false));
-	}
-
-	public Set<Pair<Integer, Integer>> findAllCoordinatesByValue(int value) {
-		return findCoordinatesByValueStream(value).collect(Collectors.toSet());
+		return StreamSupport.stream(Spliterators.spliterator(getCoordinateValueRowFromLeftIterators().iterator(), this.array2d[0].length, Spliterator.SIZED | Spliterator.ORDERED), false)
+				.flatMap(iterable -> StreamSupport.stream(Spliterators.spliterator(iterable.iterator(), this.array2d.length, Spliterator.SIZED | Spliterator.ORDERED), false));
 	}
 
 	public Optional<Pair<Integer, Integer>> findFirstCoordinatesByValue(int value) {
@@ -163,7 +157,7 @@ public class Array2D {
 	}
 
 	@NotNull
-	private Stream<Pair<Integer, Integer>> findCoordinatesByValueStream(int value) {
+	public Stream<Pair<Integer, Integer>> findCoordinatesByValueStream(int value) {
 		return streamByRowFromTopLeft()
 				.filter(coordinateValuePair -> coordinateValuePair.getRight() == value)
 				.map(Pair::getLeft);
