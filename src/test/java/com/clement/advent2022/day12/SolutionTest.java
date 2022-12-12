@@ -98,7 +98,7 @@ class SolutionTest extends SolutionBase {
 	}
 
 	private Set<Array2dNode> calculateNeighbors(Array2dNode node, Array2D map) {
-		return NeighborsCalculators.defaultCalculateNeighbors(node, map).stream()
+		return NeighborsCalculators.simpleArray2DNeighborsCalculator(node, map).stream()
 				.filter(neighbor -> neighbor.getValue() - node.getValue() <= 1)
 				.collect(Collectors.toSet());
 	}

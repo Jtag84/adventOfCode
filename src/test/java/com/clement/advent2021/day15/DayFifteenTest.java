@@ -55,6 +55,6 @@ class DayFifteenTest extends SolutionBase {
 
 	@NotNull
 	private static Array2dNode getNode(int x, int y, Array2D map) {
-		return new Array2dNode(x, y, map, NeighborsCalculators::defaultCalculateNeighbors, HeuristicFunctions::manhattanDistanceHeuristic, CostFunctions::toNodeValueCost);
+		return new Array2dNode(x, y, map, NeighborsCalculators::simpleArray2DNeighborsCalculator, HeuristicFunctions::manhattanDistanceHeuristic, CostFunctions::toNodeValueCost);
 	}
 }

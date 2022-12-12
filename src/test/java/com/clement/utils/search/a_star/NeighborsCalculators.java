@@ -6,7 +6,7 @@ import java.util.Set;
 import com.clement.utils.inputs.Array2D;
 
 public class NeighborsCalculators {
-	public static Set<Array2dNode> defaultCalculateNeighbors(Array2dNode node, Array2D map) {
+	public static Set<Array2dNode> simpleArray2DNeighborsCalculator(Array2dNode node, Array2D map) {
 		int maxXmap = map.getMaxX();
 		int maxYmap = map.getMaxY();
 
