@@ -8,7 +8,7 @@ public abstract class Node implements Comparable<Node> {
 
 	protected int fScore = Integer.MAX_VALUE;
 
-	public abstract Collection<Node> getNeighbors();
+	public abstract Collection<? extends Node> getNeighbors();
 
 	public abstract int distanceTo(Node other);
 

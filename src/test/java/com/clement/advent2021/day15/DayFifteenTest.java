@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.clement.utils.SolutionBase;
@@ -26,6 +27,7 @@ class DayFifteenTest extends SolutionBase {
 		Pair<Integer, List<Node>> costPathPair = AStar.aStarSearch(start, goal);
 
 		log.info("answer Part1: " + costPathPair);
+		Assertions.assertEquals(415, costPathPair.getLeft());
 	}
 
 	@Test
@@ -40,6 +42,7 @@ class DayFifteenTest extends SolutionBase {
 		Pair<Integer, List<Node>> costPathPair = AStar.aStarSearch(start, goal);
 
 		log.info("answer Part2: " + costPathPair);
+		Assertions.assertEquals(2864, costPathPair.getLeft());
 	}
 
 	@NotNull

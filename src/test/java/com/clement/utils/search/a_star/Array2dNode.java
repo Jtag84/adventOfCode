@@ -5,6 +5,11 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
+import org.apache.commons.lang3.tuple.Pair;
+import org.junit.jupiter.api.Assertions;
 
 import com.clement.utils.inputs.Array2D;
 
@@ -15,59 +20,94 @@ public class Array2dNode extends Node {
 	private final int x;
 	private final int y;
 
-	private Set<Node> neighbors;
+	private Set<Array2dNode> neighbors;
 
-	public Array2dNode(int x, int y, Array2D map) {
+	private final Function<Array2dNode, Set<Array2dNode>> calculateNeighbors;
+	private final BiFunction<Array2dNode, Array2dNode, Integer> heuristicDistance;
+	private final BiFunction<Array2dNode, Array2dNode, Integer> cost;
+
+	public Array2dNode(int x, int y, Array2D map,
+					   Function<Array2dNode, Set<Array2dNode>> calculateNeighbors,
+					   BiFunction<Array2dNode, Array2dNode, Integer> heuristicDistance,
+					   BiFunction<Array2dNode, Array2dNode, Integer> cost) {
+		Assertions.assertNotNull(map);
+		Assertions.assertTrue(x >= 0);
+		Assertions.assertTrue(y >= 0);
+		Assertions.assertTrue(x <= map.getMaxX());
+		Assertions.assertTrue(y <= map.getMaxY());
 		this.map = map;
 		this.x = x;
 		this.y = y;
+
+		this.calculateNeighbors = calculateNeighbors;
+		this.heuristicDistance = heuristicDistance;
+		this.cost = cost;
+	}
+
+	public Array2dNode(int x, int y, Array2D map) {
+		this(x, y, map,
+				Array2dNode::defaultCalculateNeighbors,
+				Array2dNode::defaultHeuristicDistance,
+				Array2dNode::defaultCost);
+	}
+
+	public static Array2dNode get(int x, int y, Array2dNode withNode) {
+		return new Array2dNode(x, y, withNode.map, withNode.calculateNeighbors, withNode.heuristicDistance, withNode.cost);
 	}
 
 	@Override
-	public Collection<Node> getNeighbors() {
-		Optional.ofNullable(this.neighbors).ifPresentOrElse(a -> {
-		}, this::calculateNeighbors);
+	public Collection<? extends Node> getNeighbors() {
+		Optional.ofNullable(this.neighbors)
+				.ifPresentOrElse(
+						a -> {
+						},
+						() -> this.neighbors = this.calculateNeighbors.apply(this));
+
 		return this.neighbors;
 	}
 
-	private void calculateNeighbors() {
-		int maxXmap = map.getMaxX();
-		int maxYmap = map.getMaxY();
+	public static Set<Array2dNode> defaultCalculateNeighbors(Array2dNode node) {
+		int maxXmap = node.map.getMaxX();
+		int maxYmap = node.map.getMaxY();
 
-		Set<Node> neighbors = new HashSet<>();
+		Set<Array2dNode> neighbors = new HashSet<>();
 
-		if (x > 0) {
-			neighbors.add(getNodeNeighbor(x - 1, y));
+		if (node.x > 0) {
+			neighbors.add(get(node.x - 1, node.y, node));
 		}
-		if (x < maxXmap) {
-			neighbors.add(getNodeNeighbor(x + 1, y));
+		if (node.x < maxXmap) {
+			neighbors.add(get(node.x + 1, node.y, node));
 		}
-		if (y > 0) {
-			neighbors.add(getNodeNeighbor(x, y - 1));
+		if (node.y > 0) {
+			neighbors.add(get(node.x, node.y - 1, node));
 		}
-		if (y < maxYmap) {
-			neighbors.add(getNodeNeighbor(x, y + 1));
+		if (node.y < maxYmap) {
+			neighbors.add(get(node.x, node.y + 1, node));
 		}
 
-		this.neighbors = neighbors;
-	}
-
-	private Array2dNode getNodeNeighbor(int x, int y) {
-		return new Array2dNode(x, y, map);
+		return neighbors;
 	}
 
 	@Override
 	public int distanceTo(Node other) {
 		Array2dNode other2DArray = (Array2dNode) other;
 		if (getNeighbors().contains(other)) {
-			return getCost(other2DArray);
+			return this.cost.apply(this, other2DArray);
 		} else { // use heuristic
-			return other2DArray.x - this.x + other2DArray.y - this.y;
+			return this.heuristicDistance.apply(this, other2DArray);
 		}
 	}
 
-	private int getCost(Array2dNode node) {
-		return map.get(node.x, node.y);
+	public static int defaultHeuristicDistance(Array2dNode from, Array2dNode to) {
+		return Math.abs(from.x - to.x) + Math.abs(from.y - to.y);
+	}
+
+	public static int defaultCost(Array2dNode from, Array2dNode to) {
+		return to.getValue();
+	}
+
+	public int getValue() {
+		return map.get(this.x, this.y);
 	}
 
 	@Override
@@ -86,6 +126,10 @@ public class Array2dNode extends Node {
 	@Override
 	public String toString() {
 		return "(" + x + "," + y + ")";
+	}
+
+	public Pair<Integer, Integer> getXYcoordinates() {
+		return Pair.of(this.x, this.y);
 	}
 
 }
