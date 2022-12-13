@@ -2,15 +2,14 @@ package com.clement.utils.inputs;
 
 import java.util.Iterator;
 import java.util.Optional;
-import java.util.Spliterator;
-import java.util.Spliterators;
 import java.util.function.IntUnaryOperator;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
+
+import com.google.common.collect.Streams;
 
 public class Array2D {
 
@@ -148,8 +147,8 @@ public class Array2D {
 	}
 
 	public Stream<Pair<Pair<Integer, Integer>, Integer>> streamByRowFromTopLeft() {
-		return StreamSupport.stream(Spliterators.spliterator(getCoordinateValueRowFromLeftIterators().iterator(), this.array2d[0].length, Spliterator.SIZED | Spliterator.ORDERED), false)
-				.flatMap(iterable -> StreamSupport.stream(Spliterators.spliterator(iterable.iterator(), this.array2d.length, Spliterator.SIZED | Spliterator.ORDERED), false));
+		return Streams.stream(getCoordinateValueRowFromLeftIterators())
+				.flatMap(Streams::stream);
 	}
 
 	public Optional<Pair<Integer, Integer>> findFirstCoordinatesByValue(int value) {
